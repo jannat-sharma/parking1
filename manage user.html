@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="## **Complete Admin Panel Files (5 Separate Files)**
+
+Yahan aapke **5 alag-alag files** hain jo aapke exact `style.css` ke saath perfectly kaam karenge:
+
+---
+
+## **1. `parking-slots.html`**
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Slots - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-main { padding: 100px 20px 20px; max-width: 1200px; margin: 0 auto; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .section-title { font-size: 2.5rem; color: #1e3c72; margin: 0; }
+        .add-btn { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; padding: 15px 25px; border: none; border-radius: 15px;
+            font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+        }
+        .add-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(102,126,234,0.4); }
+        .table-container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); overflow: hidden; }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th { background: #f8f9ff; padding: 20px; text-align: left; font-weight: 600; color: #1e3c72; }
+        .admin-table td { padding: 20px; border-bottom: 1px solid #e1e8ff; }
+        .status { padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: 500; }
+        .status.available { background: #d4edda; color: #155724; }
+        .status.occupied { background: #fff3cd; color: #856404; }
+        .btn-small { background: none; border: 2px solid #e1e8ff; padding: 8px 12px; border-radius: 8px; cursor: pointer; margin-right: 5px; }
+        .btn-edit { color: #667eea; }
+        .btn-delete { color: #dc3545; }
+        .btn-small:hover { background: #667eea; color: white; transform: translateY(-2px); }
+        .slots-visual { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; margin: 30px 0; }
+        .slot-visual { padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+        .slot-visual.available { background: #d4edda; border: 3px solid #28a745; }
+        .slot-visual.occupied { background: #f8d7da; border: 3px solid #dc3545; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-car"></i>
+                <span>Parking Admin</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="admin.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="parking-slots.html" class="nav-link active"><i class="fas fa-parking"></i> Slots</a></li>
+                <li class="nav-item"><a href="active-vehicles.html" class="nav-link"><i class="fas fa-car-side"></i> Vehicles</a></li>
+                <li class="nav-item"><a href="manage-users.html" class="nav-link"><i class="fas fa-users"></i> Users</a></li>
+                <li class="nav-item"><a href="reports.html" class="nav-link"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li class="nav-item auth-item"><a href="login.html" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <div class="admin-main">
+        <div class="section-header">
+            <h1 class="section-title"><i class="fas fa-parking"></i> Parking Slots Management</h1>
+            <button class="add-btn" onclick="openAddSlotModal()">
+                <i class="fas fa-plus"></i> Add New Slot
+            </button>
+        </div>
+
+        <!-- Visual Slot Grid -->
+        <div class="slots-visual">
+            <div class="slot-visual available" onclick="selectSlot('A-01')">
+                <i class="fas fa-check-circle"></i><br>A-01
+            </div>
+            <div class="slot-visual occupied" onclick="selectSlot('B-05')">
+                <i class="fas fa-car"></i><br>B-05
+            </div>
+            <div class="slot-visual available" onclick="selectSlot('C-12')">
+                <i class="fas fa-check-circle"></i><br>C-12
+            </div>
+        </div>
+
+        <!-- Slots Table -->
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Slot ID</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Vehicle No.</th>
+                        <th>Entry Time</th>
+                        <th>Floor</th>
+                        <th>Rate/Hour</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>A-01</strong></td>
+                        <td>Car</td>
+                        <td><span class="status available">Available</span></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>Ground</td>
+                        <td>₹50</td>
+                        <td>
+                            <button class="btn-small btn-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn-small btn-delete" title="Delete"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>B-05</strong></td>
+                        <td>Bike</td>
+                        <td><span class="status occupied">Occupied</span></td>
+                        <td>DL01AB1234</td>
+                        <td>10:30 AM</td>
+                        <td>Ground</td>
+                        <td>₹20</td>
+                        <td>
+                            <button class="btn-small btn-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn-small btn-delete" title="Delete"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function openAddSlotModal() {
+            alert('Add Slot Modal - Connect to your backend!');
+        }
+        function selectSlot(slotId) {
+            alert('Selected Slot: ' + slotId);
+        }
+    </script>
+</body>
+</html>

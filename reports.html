@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-main { padding: 100px 20px 20px; max-width: 1200px; margin: 0 auto; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px; }
+        .section-title { font-size: 2.5rem; color: #1e3c72; margin: 0; }
+        .report-filters { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
+        .filter-input { padding: 12px 20px; border: 2px solid #e1e8ff; border-radius: 12px; font-size: 1rem; }
+        .filter-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 24px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .stat-card { background: white; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.1); }
+        .stat-icon { font-size: 3rem; margin-bottom: 15px; }
+        .stat-icon.revenue { color: #ff6b6b; }
+        .stat-icon.vehicles { color: #667eea; }
+        .stat-icon.users { color: #28a745; }
+        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+        .chart-container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 15px 50px rgba(0,0,0,0.1); }
+        .recent-table { background: white; border-radius: 20px; box-shadow: 0 15px 50px rgba(0,0,0,0.1); overflow: hidden; }
+        .admin-table th { background: #f8f9ff; padding: 20px; font-weight: 600; color: #1e3c72; }
+        .admin-table td { padding: 20px; border-bottom: 1px solid #e1e8ff; }
+        .export-btn { background: #28a745; color: white; padding: 12px 24px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-car"></i>
+                <span>Parking Admin</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="admin.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="parking-slots.html" class="nav-link"><i class="fas fa-parking"></i> Slots</a></li>
+                <li class="nav-item"><a href="active-vehicles.html" class="nav-link"><i class="fas fa-car-side"></i> Vehicles</a></li>
+                <li class="nav-item"><a href="manage-users.html" class="nav-link"><i class="fas fa-users"></i> Users</a></li>
+                <li class="nav-item"><a href="reports.html" class="nav-link active"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li class="nav-item auth-item"><a href="login.html" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <div class="admin-main">
+        <div class="section-header">
+            <h1 class="section-title"><i class="fas fa-chart-bar"></i> Reports & Analytics</h1>
+            <div class="report-filters">
+                <input type="date" class="filter-input" id="startDate">
+                <input type="date" class="filter-input" id="endDate">
+                <button class="filter-btn" onclick="generateReport()">
+                    <i class="fas fa-search"></i> Filter
+                </button>
+                <button class="export-btn" onclick="exportReport()">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-rupee-sign stat-icon revenue"></i>
+                <h3>₹1,24,500</h3>
+                <p>Total Revenue (This Month)</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-car stat-icon vehicles"></i>
+                <h3>245</h3>
+                <p>Total Vehicles</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users stat-icon users"></i>
+                <h3>156</h3>
+                <p>Registered Users</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>+23%</h3>
+                <p>Growth Rate</p>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row">
+            <div class="chart-container">
+                <h4>Revenue Trend</h4>
+                <canvas id="revenueChart" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-container">
+                <h4>Vehicle Entry Trend</h4>
+                <canvas id="vehiclesChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="recent-table">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Vehicle No.</th>
+                        <th>Slot</th>
+                        <th>Duration</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>08 Jan 2026</td>
+                        <td>DL01AB1234</td>
+                        <td>B-05</td>
+                        <td>2h 45m</td>
+                        <td>₹55</td>
+                        <td><span style="color: #28a745;">Paid</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function generateReport() {
+            alert('Generating report for selected dates...');
+        }
+        function exportReport() {
+            alert('Report exported as PDF/Excel!');
+        }
+    </script>
+</body>
+</html>

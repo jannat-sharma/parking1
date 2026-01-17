@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Plans - Smart Parking Management System</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f8f9ff;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: #1e3c72;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-link.active {
+            color: #ffcc00;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 5px auto;
+        }
+
+        /* ===== PRICING SECTION ===== */
+        .pricing-section {
+            padding: 120px 40px 100px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #1e3c72;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .plan-card {
+            background: white;
+            padding: 50px 30px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            transition: 0.4s;
+            position: relative;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .plan-card.popular {
+            border-top: 5px solid #ff6b6b;
+        }
+
+        .plan-icon {
+            font-size: 4rem;
+            color: #667eea;
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            color: #1e3c72;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .plan-features li {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .plan-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .plan-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* ===== MOBILE VIEW ===== */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                background: #1e3c72;
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                padding: 20px 0;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-logo">
+            <i class="fas fa-car"></i> SmartPark
+        </div>
+
+        <ul class="nav-menu">
+            <li><a href="#" class="nav-link">Home</a></li>
+            <li><a href="#" class="nav-link">Book Now</a></li>
+            <li><a href="#" class="nav-link active">Pricing</a></li>
+            <li><a href="#" class="nav-link">Contact</a></li>
+        </ul>
+
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </div>
+</nav>
+
+<!-- PRICING -->
+<section class="pricing-section">
+    <h1 class="section-title">Choose Your Perfect Plan</h1>
+
+    <div class="pricing-grid">
+        <div class="plan-card">
+            <div class="plan-icon"><i class="fas fa-clock"></i></div>
+            <h3>Hourly Parking</h3>
+            <div class="plan-price">₹20/hour</div>
+            <button class="plan-btn">Get Started</button>
+        </div>
+
+        <div class="plan-card popular">
+            <div class="plan-icon"><i class="fas fa-sun"></i></div>
+            <h3>Daily Pass</h3>
+            <div class="plan-price">₹120/day</div>
+            <button class="plan-btn">Choose Daily</button>
+        </div>
+
+        <div class="plan-card">
+            <div class="plan-icon"><i class="fas fa-calendar-alt"></i></div>
+            <h3>Monthly Subscription</h3>
+            <div class="plan-price">₹2500/month</div>
+            <button class="plan-btn">Subscribe Monthly</button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+    // Hamburger menu
+    const hamburger = document.querySelector(".hamburger");
+    const navMenu = document.querySelector(".nav-menu");
+
+    hamburger.addEventListener("click", () => {
+        navMenu.classList.toggle("active");
+    });
+
+    // Pricing button click
+    document.querySelectorAll(".plan-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            alert("✅ Parking plan selected successfully!");
+        });
+    });
+</script>
+
+</body>
+</html>

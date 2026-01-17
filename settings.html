@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-main { padding: 100px 20px 20px; max-width: 1200px; margin: 0 auto; }
+        .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .settings-card { background: white; padding: 40px; border-radius: 25px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+        .settings-card h3 { color: #1e3c72; font-size: 1.5rem; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-weight: 600; color: #1e3c72; margin-bottom: 8px; font-size: 1rem; }
+        .form-group input, .form-group select, .form-group textarea { 
+            width: 100%; padding: 15px 20px; border: 2px solid #e1e8ff; 
+            border-radius: 12px; font-size: 1rem; transition: all 0.3s ease; 
+        }
+        .form-group input:focus, .form-group select:focus { 
+            outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); 
+        }
+        .save-btn { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 15px 30px; border: none; border-radius: 12px; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; }
+        .save-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(40,167,69,0.4); }
+        .toggle-switch { position: relative; display: inline-block; width: 60px; height: 34px; margin: 10px 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #ccc; border-radius: 34px; transition: 0.3s; cursor: pointer; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: 0.3s; }
+        input:checked + .slider { background: #28a745; }
+        input:checked + .slider:before { transform: translateX(26px); }
+        .pricing-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .pricing-table th, .pricing-table td { padding: 15px; text-align: left; border-bottom: 1px solid #e1e8ff; }
+        .pricing-table th { background: #f8f9ff; color: #1e3c72; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-car"></i>
+                <span>Parking Admin</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="admin.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="nav-item"><a href="parking-slots.html" class="nav-link"><i class="fas fa-parking"></i> Slots</a></li>
+                <li class="nav-item"><a href="active-vehicles.html" class="nav-link"><i class="fas fa-car-side"></i> Vehicles</a></li>
+                <li class="nav-item"><a href="manage-users.html" class="nav-link"><i class="fas fa-users"></i> Users</a></li>
+                <li class="nav-item"><a href="reports.html" class="nav-link"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li class="nav-item"><a href="settings.html" class="nav-link active"><i class="fas fa-cog"></i> Settings</a></li>
+                <li class="nav-item auth-item"><a href="login.html" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <div class="admin-main">
+        <h1 style="font-size: 2.5rem; color: #1e3c72; margin-bottom: 40px;"><i class="fas fa-sliders-h"></i> System Settings</h1>
+
+        <div class="settings-grid">
+            <!-- General Settings -->
+            <div class="settings-card">
+                <h3><i class="fas fa-cog"></i> General Settings</h3>
+                <div class="form-group">
+                    <label>Parking Name</label>
+                    <input type="text" value="SmartPark Pro" placeholder="Enter parking name">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea rows="3" placeholder="Enter parking address">123 Main Street, City Center</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Operating Hours</label>
+                    <input type="text" value="24/7 Open">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" checked> Enable Online Booking
+                    </label>
+                </div>
+                <button class="save-btn">Save General Settings</button>
+            </div>
+
+            <!-- Pricing Settings -->
+            <div class="settings-card">
+                <h3><i class="fas fa-rupee-sign"></i> Pricing Configuration</h3>
+                <table class="pricing-table">
+                    <thead>
+                        <tr>
+                            <th>Vehicle Type</th>
+                            <th>Rate/Hour</th>
+                            <th>Min Charges</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Car</td>
+                            <td>₹50</td>
+                            <td>₹100</td>
+                            <td><i class="fas fa-edit" style="color: #667eea; cursor: pointer;"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Bike</td>
+                            <td>₹20</td>
+                            <td>₹40</td>
+                            <td><i class="fas fa-edit" style="color: #667eea; cursor: pointer;"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Truck</td>
+                            <td>₹120</td>
+                            <td>₹300</td>
+                            <td><i class="fas fa-edit" style="color: #667eea; cursor: pointer;"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="save-btn" style="margin-top: 20px;">Update Pricing</button>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="settings-card">
+                <h3><i class="fas fa-shield-alt"></i> Security & Notifications</h3>
+                <div class="form-group">
+                    <label class="flex items-center gap-3">
+                        SMS Notifications
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="flex items-center gap-3">
+                        Email Alerts
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="flex items-center gap-3">
+                        Auto Backup
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </label>
+                </div>
+                <button class="save-btn">Save Security Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.save-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert('Settings saved successfully!');
+            });
+        });
+    </script>
+</body>
+</html>

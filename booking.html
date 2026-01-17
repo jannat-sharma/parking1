@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Parking - SmartPark</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation (same as index.html) -->
+    <nav class="navbar">
+        <!-- Copy the entire nav from index.html -->
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-parking"></i>
+                <span>SmartPark</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="booking.html" class="nav-link active">
+                        <i class="fas fa-calendar-plus"></i>
+                        <span>Book Parking</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="my-bookings.html" class="nav-link">
+                        <i class="fas fa-receipt"></i>
+                        <span>My Bookings</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pricing.html" class="nav-link">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Pricing</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact Us</span>
+                    </a>
+                </li>
+                <li class="nav-item auth-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Login/Register</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Booking Section -->
+    <section class="booking-section">
+        <div class="container">
+            <h1 class="section-title">Book Your Parking Space</h1>
+            <div class="booking-form-container">
+                <form class="booking-form" id="bookingForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Parking Location</label>
+                        <select id="location" required>
+                            <option value="">Select Location</option>
+                            <option value="mall">City Mall</option>
+                            <option value="airport">Airport Terminal</option>
+                            <option value="hospital">City Hospital</option>
+                            <option value="office">Business District</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Date</label>
+                            <input type="date" id="bookingDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-clock"></i> Time</label>
+                            <input type="time" id="bookingTime" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-car"></i> Vehicle Number</label>
+                        <input type="text" id="vehicleNumber" placeholder="e.g., ABC1234" maxlength="10" required>
+                    </div>
+
+                    <div class="availability-section">
+                        <div class="availability-status" id="availabilityStatus">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Checking availability...
+                        </div>
+                        <div class="slot-selection" id="slotSelection" style="display: none;">
+                            <h4>Available Slots:</h4>
+                            <div class="slots-grid" id="slotsGrid"></div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="book-now-btn" id="bookNowBtn" disabled>
+                        <i class="fas fa-lock"></i>
+                        Book Now - ₹<span id="totalPrice">0</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

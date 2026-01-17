@@ -1,0 +1,220 @@
+// Parking Management System - JavaScript
+// Professional parking slot management with real-time updates
+
+// Global parking state
+let parkingState = {
+    totalSlots: 50,
+    occupiedSlots: 15,
+    availableSlots: 35
+};
+
+// DOM Elements
+const elements = {
+    totalSlots: document.getElementById('totalSlots'),
+    availableSlots: document.getElementById('availableSlots'),
+    occupiedSlots: document.getElementById('occupiedSlots'),
+    parkVehicle: document.getElementById('parkVehicle'),
+    removeVehicle: document.getElementById('removeVehicle'),
+    slotsGrid: document.getElementById('slotsGrid'),
+    navMenu: document.getElementById('navMenu'),
+    hamburger: document.getElementById('hamburger')
+};
+
+// Initialize the parking system when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    initializeNavigation();
+    initializeParkingSlots();
+    setupEventListeners();
+    updateDisplay();
+});
+
+// Navigation functionality (Mobile hamburger menu)
+function initializeNavigation() {
+    // Toggle mobile menu
+    elements.hamburger.addEventListener('click', function() {
+        elements.navMenu.classList.toggle('active');
+    });
+
+    // Close menu when clicking on nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+            elements.navMenu.classList.remove('active');
+        });
+    });
+
+    // Update active nav link
+    window.addEventListener('scroll', function() {
+        updateActiveNavLink();
+    });
+}
+
+// Update active navigation link based on scroll position
+function updateActiveNavLink() {
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    let current = '';
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 200) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}` || 
+            (current === '' && link.getAttribute('href') === 'index.html')) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// Initialize parking slots grid
+function initializeParkingSlots() {
+    // Clear existing slots
+    elements.slotsGrid.innerHTML = '';
+    
+    // Generate slot elements
+    for (let i = 1; i <= parkingState.totalSlots; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+        slot.dataset.slotId = i;
+        slot.innerHTML = `
+            <i class="fas fa-car"></i>
+            <div>Slot ${i}</div>
+        `;
+        elements.slotsGrid.appendChild(slot);
+    }
+    
+    updateSlotVisuals();
+}
+
+// Setup all event listeners
+function setupEventListeners() {
+    // Park vehicle button
+    elements.parkVehicle.addEventListener('click', parkVehicle);
+    
+    // Remove vehicle button
+    elements.removeVehicle.addEventListener('click', removeVehicle);
+    
+    // Individual slot clicks
+    elements.slotsGrid.addEventListener('click', handleSlotClick);
+}
+
+// Park a vehicle (occupy a slot)
+function parkVehicle() {
+    if (parkingState.availableSlots > 0) {
+        parkingState.occupiedSlots++;
+        parkingState.availableSlots--;
+        updateDisplay();
+        updateSlotVisuals();
+        showNotification('Vehicle parked successfully!', 'success');
+    } else {
+        showNotification('No parking slots available!', 'error');
+    }
+}
+
+// Remove a vehicle (free a slot)
+function removeVehicle() {
+    if (parkingState.occupiedSlots > 0) {
+        parkingState.occupiedSlots--;
+        parkingState.availableSlots++;
+        updateDisplay();
+        updateSlotVisuals();
+        showNotification('Vehicle removed successfully!', 'success');
+    } else {
+        showNotification('No vehicles to remove!', 'error');
+    }
+}
+
+// Handle individual slot clicks
+function handleSlotClick(e) {
+    const slot = e.target.closest('.slot');
+    if (!slot || slot.classList.contains('unavailable')) return;
+    
+    // Toggle selection
+    slot.classList.toggle('selected');
+}
+
+// Update all display elements
+function updateDisplay() {
+    elements.totalSlots.textContent = parkingState.totalSlots;
+    elements.availableSlots.textContent = parkingState.availableSlots;
+    elements.occupiedSlots.textContent = parkingState.occupiedSlots;
+    
+    // Update button states
+    elements.parkVehicle.disabled = parkingState.availableSlots === 0;
+    elements.removeVehicle.disabled = parkingState.occupiedSlots === 0;
+}
+
+// Update visual state of parking slots
+function updateSlotVisuals() {
+    const slots = document.querySelectorAll('.slot');
+    const occupiedPercentage = (parkingState.occupiedSlots / parkingState.totalSlots) * 100;
+    
+    slots.forEach((slot, index) => {
+        const isOccupied = index < parkingState.occupiedSlots;
+        
+        slot.classList.remove('available', 'unavailable', 'selected');
+        
+        if (isOccupied) {
+            slot.classList.add('unavailable');
+            slot.innerHTML = `
+                <i class="fas fa-car"></i>
+                <div>Occupied</div>
+            `;
+        } else {
+            slot.classList.add('available');
+            slot.innerHTML = `
+                <i class="fas fa-parking"></i>
+                <div>Slot ${index + 1}</div>
+            `;
+        }
+    });
+}
+
+// Show notification messages
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${type === 'success' ? '#d4edda' : '#f8d7da'};
+        color: ${type === 'success' ? '#155724' : '#721c24'};
+        padding: 15px 20px;
+        border-radius: 10px;
+        border-left: 5px solid ${type === 'success' ? '#28a745' : '#dc3545'};
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        z-index: 2000;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        font-weight: 500;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => notification.style.transform = 'translateX(0)', 100);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => document.body.removeChild(notification), 300);
+    }, 3000);
+}
+
+// Simulate real-time updates (optional demo feature)
+setInterval(() => {
+    if (Math.random() < 0.1 && parkingState.availableSlots > 0 && parkingState.occupiedSlots < parkingState.totalSlots) {
+        // Random parking activity simulation
+        if (Math.random() < 0.5) {
+            parkVehicle();
+        } else {
+            removeVehicle();
+        }
+    }
+}, 8000);

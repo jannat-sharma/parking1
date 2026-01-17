@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Park - Professional Parking Management System</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-parking"></i>
+                Smart Park
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a href="indexx.html" class="nav-link active">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">
+                        <i class="fas fa-info-circle"></i> About
+                    </a>
+                </li>
+               
+                
+              
+                <li class="nav-item auth-item">
+                    <a href="#" class="nav-link" onclick="openAdminDropdown(event)">
+                        <i class="fas fa-user-shield"></i> Admin
+                        <i class="fas fa-caret-down" style="margin-left: 8px;"></i>
+                    </a>
+                </li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Dropdown Menu -->
+    <div id="adminDropdown" class="admin-dropdown" style="display: none; position: fixed; top: 70px; right: 20px; background: white; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border-radius: 15px; z-index: 1001; padding: 10px 0; min-width: 220px;">
+        <a href="admin.html" class="admin-dropdown-item">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="parking slots.html" class="admin-dropdown-item">
+            <i class="fas fa-parking"></i> Parking Slots
+        </a>
+        <a href="active-vehicles.html" class="admin-dropdown-item">
+            <i class="fas fa-car-side"></i> Active Vehicles
+        </a>
+        <a href="manage users.html" class="admin-dropdown-item">
+            <i class="fas fa-users"></i> Manage Users
+        </a>
+        <a href="reports.html" class="admin-dropdown-item">
+            <i class="fas fa-chart-bar"></i> Reports
+        </a>
+        <a href="settings.html" class="admin-dropdown-item">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+        <a href="login.html" class="admin-dropdown-item logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div>
+                <h1 class="hero-title">Smart Parking Management System</h1>
+                <p class="hero-description">Professional parking solution with real-time slot monitoring, easy vehicle management, and seamless booking experience.</p>
+                <a href="#parking-section" class="cta-button">
+                    <i class="fas fa-car"></i>
+                    View Parking Slots
+                </a>
+            </div>
+            <div style="text-align: center;">
+                <i class="fas fa-parking hero-icon"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parking Management Section -->
+    <section class="features" id="parking-section">
+        <div class="container">
+            <h2 class="section-title">Parking Status</h2>
+            
+            <!-- Parking Stats -->
+            <div class="features-grid" style="max-width: 800px; margin: 0 auto;">
+                <div class="feature-card">
+                    <i class="fas fa-parking-circle"></i>
+                    <h3>Total Slots</h3>
+                    <div style="font-size: 2.5rem; font-weight: bold; color: #1e3c72; margin-top: 10px;" id="totalSlots">50</div>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                    <h3>Available</h3>
+                    <div style="font-size: 2.5rem; font-weight: bold; color: #28a745; margin-top: 10px;" id="availableSlots">35</div>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-times-circle" style="color: #dc3545;"></i>
+                    <h3>Occupied</h3>
+                    <div style="font-size: 2.5rem; font-weight: bold; color: #dc3545; margin-top: 10px;" id="occupiedSlots">15</div>
+                </div>
+            </div>
+
+            <!-- Parking Controls -->
+            <div class="booking-section" style="padding: 60px 0;">
+                <div class="container">
+                    <div class="availability-section">
+                        <div class="availability-status">
+                            <h3 style="color: #1e3c72; margin-bottom: 10px;">
+                                <i class="fas fa-car"></i> Quick Parking Actions
+                            </h3>
+                        </div>
+                        
+                        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;">
+                            <!-- Park Vehicle Button -->
+                            <button class="book-now-btn" id="parkVehicle" style="min-width: 200px;">
+                                <i class="fas fa-plus"></i> Park Vehicle
+                            </button>
+                            
+                            <!-- Remove Vehicle Button -->
+                            <button class="book-now-btn" id="removeVehicle" style="min-width: 200px; background: linear-gradient(135deg, #ff6b6b, #ee5a52);">
+                                <i class="fas fa-minus"></i> Remove Vehicle
+                            </button>
+                        </div>
+
+                        <!-- Parking Slots Grid -->
+                        <div class="slots-grid" id="slotsGrid">
+                            <!-- Slots will be generated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+    
+    <style>
+        /* Admin Dropdown Styles */
+        .admin-dropdown {
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .admin-dropdown-item {
+            display: block;
+            padding: 15px 25px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .admin-dropdown-item:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .admin-dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .admin-dropdown-item.logout:hover {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+        
+        /* Hide dropdown when clicking outside */
+        body.admin-dropdown-open #adminDropdown {
+            display: block !important;
+        }
+    </style>
+
+    <script>
+        function openAdminDropdown(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const dropdown = document.getElementById('adminDropdown');
+            const isOpen = dropdown.style.display === 'block';
+            
+            // Close all dropdowns first
+            dropdown.style.display = 'none';
+            document.body.classList.remove('admin-dropdown-open');
+            
+            if (!isOpen) {
+                // Open current dropdown
+                dropdown.style.display = 'block';
+                document.body.classList.add('admin-dropdown-open');
+            }
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            document.getElementById('adminDropdown').style.display = 'none';
+            document.body.classList.remove('admin-dropdown-open');
+        });
+        
+        // Prevent dropdown from closing when clicking inside it
+        document.getElementById('adminDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>

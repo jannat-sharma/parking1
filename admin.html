@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Parking Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Admin Panel Specific Styles - Compatible with your style.css */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
+            min-height: 100vh;
+        }
+ 
+        .admin-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            margin-top: 70px; /* Navbar height */
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: white;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.1);
+            height: calc(100vh - 70px);
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            overflow-y: auto;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 30px 25px;
+            border-bottom: 1px solid #e1e8ff;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .sidebar-item {
+            padding: 18px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background: #f8f9ff;
+            color: #1e3c72;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .sidebar-item i {
+            font-size: 1.2rem;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            color: #1e3c72;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 0;
+        }
+
+        .section-header p {
+            color: #666;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 20px;
+            display: flex;
+            gap: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.available { background: #d4edda; color: #28a745; }
+        .stat-icon.occupied { background: #fff3cd; color: #856404; }
+        .stat-icon.revenue { background: #d1ecf1; color: #0c5460; }
+        .stat-icon.users { background: #f8d7da; color: #721c24; }
+
+        .stat-info h3 {
+            font-size: 2.5rem;
+            color: #1e3c72;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .stat-info p {
+            color: #666;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            height: 400px;
+        }
+
+        .chart-card h4 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 20px rgba(102,126,234,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+        }
+
+        .btn-small {
+            padding: 10px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-edit { background: #28a745; color: white; }
+        .btn-delete { background: #dc3545; color: white; }
+        .btn-checkout { background: #ff6b6b; color: white; padding: 12px 20px; }
+
+        .btn-small:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px 25px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .admin-table td {
+            padding: 20px 25px;
+            border-bottom: 1px solid #e1e8ff;
+        }
+
+        .admin-table tr:hover {
+            background: #f8f9ff;
+        }
+
+        .status {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status.available { background: #d4edda; color: #155724; }
+        .status.occupied { background: #fff3cd; color: #856404; }
+        .status.active { background: #d1ecf1; color: #0c5460; }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 0;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        .close {
+            font-size: 2rem;
+            cursor: pointer;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        .modal-form {
+            padding: 40px;
+        }
+
+        .modal-form .form-group {
+            margin-bottom: 25px;
+        }
+
+        .modal-form .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1e3c72;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .modal-form input,
+        .modal-form select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e8ff;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .modal-form input:focus,
+        .modal-form select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .full-width {
+            width: 100%;
+        }
+
+        /* Menu Overlay */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 70px);
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-car"></i>
+                <span>Parking Admin</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+    <li class="nav-item">
+        <a href="admin.html" class="nav-link active">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="parking-slots.html" class="nav-link">
+            <i class="fas fa-parking"></i> Parking Slots
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="active-vehicles.html" class="nav-link">
+            <i class="fas fa-car-side"></i> Vehicles
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="manage user.html" class="nav-link">
+            <i class="fas fa-users"></i> Users
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="reports.html" class="nav-link">
+            <i class="fas fa-chart-bar"></i> Reports
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="settings.html" class="nav-link">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+    </li>
+
+    <li class="auth-item">
+        <a href="login.html" class="nav-link">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </li>
+</ul>
+
+     <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="parking slots.html" class="nav-link" data-page="parking slots">
+                        <i class="fas fa-parking"></i> Parking Slots
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="Active-vehicles.html" class="nav-link" data-page="vehicles">
+                        <i class="fas fa-car-side"></i> Vehicles
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="Manage user.html" class="nav-link" data-page="user">
+                        <i class="fas fa-users"></i> Users
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reports.html" class="nav-link" data-page="reports">
+                        <i class="fas fa-chart-bar"></i> Reports
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.html" class="nav-link" data-page="settings">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+                <li class="auth-item">
+                    <a href="login.html" class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar active" id="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-user-shield"></i> Admin Panel</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item active" data-page="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="sidebar-item" data-page="slots">
+                    <i class="fas fa-parking"></i>
+                    <span>Parking Slots</span>
+                </li>
+                <li class="sidebar-item" data-page="vehicles">
+                    <i class="fas fa-car-side"></i>
+                    <span>Active Vehicles</span>
+                </li>
+                <li class="sidebar-item" data-page="users">
+                    <i class="fas fa-users"></i>
+                    <span>Manage Users</span>
+                </li>
+                <li class="sidebar-item" data-page="reports">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Reports</span>
+                </li>
+                <li class="sidebar-item" data-page="settings">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Settings</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <div>
+                        <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                        <p>Real-time overview of parking operations</p>
+                    </div>
+                    <button class="btn-primary" onclick="refreshStats()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon available">
+                            <i class="fas fa-parking"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="availableSlots">45</h3>
+                            <p>Available Slots</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon occupied">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="occupiedSlots">23</h3>
+                            <p>Occupied Slots</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon revenue">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="todayRevenue">₹12,450</h3>
+                            <p>Today's Revenue</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon users">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalUsers">156</h3>
+                            <p>Total Users</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h4><i class="fas fa-chart-pie"></i> Slot Occupancy</h4>
+                        <canvas id="occupancyChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h4><i class="fas fa-chart-line"></i> Revenue Trend</h4>
+                        <canvas id="revenueChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other sections remain same but styled -->
+            <section id="slots" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-parking"></i> Parking Slots</h2>
+                    <button class="btn-primary add-btn" onclick="openAddSlotModal()">
+                        <i class="fas fa-plus"></i> Add New Slot
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Slot ID</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Vehicle No.</th>
+                                <th>Entry Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>A-01</strong></td>
+                                <td>Car</td>
+                                <td><span class="status available">Available</span></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>
+                                    <button class="btn-small btn-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-small btn-delete" title="Delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>B-05</strong></td>
+                                <td>Bike</td>
+                                <td><span class="status occupied">Occupied</span></td>
+                                <td>DL01AB1234</td>
+                                <td>10:30 AM</td>
+                                <td>
+                                    <button class="btn-small btn-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-small btn-delete" title="Delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Slot Modal -->
+    <div class="modal" id="addSlotModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus-circle"></i> Add New Parking Slot</h3>
+                <span class="close" onclick="closeAddSlotModal()">&times;</span>
+            </div>
+            <form class="modal-form" onsubmit="addSlot(event)">
+                <div class="form-group">
+                    <label><i class="fas fa-hashtag"></i> Slot ID</label>
+                    <input type="text" id="slotId" placeholder="A-01" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-car"></i> Category</label>
+                    <select id="slotCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Car">Car</option>
+                        <option value="Bike">Bike</option>
+                        <option value="Truck">Truck</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Floor</label>
+                        <input type="text" id="slotFloor" placeholder="Ground Floor">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-rupee-sign"></i> Rate/Hour</label>
+                        <input type="number" id="slotRate" placeholder="50" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary full-width">Add Slot</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Navigation functionality
+        document.querySelectorAll('[data-page]').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.getAttribute('data-page');
+                
+                // Update nav active
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update sidebar active
+                document.querySelectorAll('.sidebar-item').forEach(li => li.classList.remove('active'));
+                document.querySelector(`[data-page="${page}"]`).parentElement.classList.add('active');
+                
+                // Show content
+                document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+                document.getElementById(page).classList.add('active');
+            });
+        });
+
+        // Mobile menu toggle
+        document.getElementById('hamburger').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
+        });
+
+        // Sidebar toggle on mobile
+        document.getElementById('sidebar').addEventListener('click', function() {
+            if (window.innerWidth <= 1024) {
+                this.classList.toggle('active');
+            }
+        });
+
+        // Modal functions
+        function openAddSlotModal() {
+            document.getElementById('addSlotModal').classList.add('active');
+        }
+
+        function closeAddSlotModal() {
+            document.getElementById('addSlotModal').classList.remove('active');
+        }
+
+        function addSlot(e) {
+            e.preventDefault();
+            alert('Slot added successfully! Connect to your backend here.');
+            closeAddSlotModal();
+        }
+
+        function refreshStats() {
+            alert('Stats refreshed! Connect to your API here.');
+        }
+
+        // Form row styling for modals
+        document.querySelectorAll('.form-row').forEach(row => {
+            row.style.display = 'grid';
+            row.style.gridTemplateColumns = '1fr 1fr';
+            row.style.gap = '20px';
+        });
+
+        // Initialize charts (dummy data)
+        setTimeout(() => {
+            if (typeof Chart !== 'undefined') {
+                new Chart(document.getElementById('occupancyChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Available', 'Occupied'],
+                        datasets: [{
+                            data: [45, 23],
+                            backgroundColor: ['#28a745', '#ffc107']
+                        }]
+                    }
+                });
+            }
+        }, 100);
+    </script>
+</body>
+</html>
